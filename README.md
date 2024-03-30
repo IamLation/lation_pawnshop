@@ -2,7 +2,7 @@
 A modern Pawn Shop/Sell Shop script for ESX, QBCore & QBox frameworks built for ox_inventory! Provide your players a more interactive experience by getting rid of context menu's and enjoy a simple & clean drag-and-drop to a secondary inventory to sell an item. 
 
 ## Preview
-[![lation pawnshop preview](http://img.youtube.com/vi/NbtY1GTjfyc/0.jpg)](http://www.youtube.com/watch?v=NbtY1GTjfyc)
+[![lation pawnshop preview](http://img.youtube.com/vi/ftPdTO3tlOo/0.jpg)](http://www.youtube.com/watch?v=ftPdTO3tlOo)
 
 ## Support, Scripts & More
 - [Visit our Store](https://lationscripts.com/github)
