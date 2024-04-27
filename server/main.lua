@@ -1,6 +1,9 @@
 -- Initialize table to store inventories for hook filter
 local inventories = {}
 
+-- Initialize variable to track removal status of non-stackable items
+local waiting = false
+
 -- Function used to make numbers prettier (Credits to ESX for the function)
 --- @param value number
 local GroupDigits = function(value)
@@ -24,6 +27,25 @@ for shopId, data in pairs(Config.Shops) do
         exports.ox_inventory:RegisterStash(shopId, data.name, data.slots, data.weight)
     end
     inventories[#inventories + 1] = shopId
+end
+
+-- Thread to handle removal of non-stackable items
+-- A pretty hacky solution, but works nevertheless
+--- @param source number
+--- @param item string
+--- @param count number
+local AwaitRemoval = function(source, item, count)
+    local source = source
+    local wait = 5 -- Increase this number slightly if items failing to remove
+    while waiting do
+        Wait(0)
+        wait = wait - 1
+        if wait <= 0 then
+            exports.ox_inventory:RemoveItem(source, item, count)
+            waiting = false
+            break
+        end
+    end
 end
 
 -- Used to handle all movements and final transaction in inventory
@@ -83,6 +105,10 @@ local BeginTransaction = function(payload)
                             Strings.Logs.messages.message ..Strings.Logs.messages.itemSold.. GroupDigits(quantity).. ' ' ..info.label.. Strings.Logs.messages.itemSold2.. GroupDigits(price).. ' ' ..data.account,
                             Strings.Logs.colors.green
                         )
+                    end
+                    if not payload.stack then
+                        waiting = true
+                        CreateThread(function() AwaitRemoval(source, payload.fromSlot.name, payload.count) end)
                     end
                     return true
                 end

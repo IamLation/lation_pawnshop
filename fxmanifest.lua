@@ -4,7 +4,7 @@ lua54 'yes'
 
 name 'lation_pawnshop'
 author 'iamlation'
-version '1.0.0'
+version '1.0.1'
 description 'A Pawn Shop script for ESX, QBCore & QBox using ox_inventory'
 
 server_scripts {

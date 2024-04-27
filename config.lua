@@ -3,7 +3,8 @@ Config = {} -- Do not alter
 -- 🔎 Looking for more high quality scripts?
 -- 🛒 Shop Now: https://lationscripts.com/github
 -- 💬 Join Discord: https://discord.gg/9EbY4nM5uu
-Config.YouFoundTheBestScripts = true
+-- 😢 How dare you leave this option false?!
+Config.YouFoundTheBestScripts = false
 
 -- Use only if needed, directed by support or know what you're doing
 -- Notice: enabling debug features will significantly increase resmon
