@@ -5,7 +5,7 @@ A modern Pawn Shop/Sell Shop script for ESX, QBCore & QBox frameworks built for 
 [![lation pawnshop preview](http://img.youtube.com/vi/ftPdTO3tlOo/0.jpg)](http://www.youtube.com/watch?v=ftPdTO3tlOo)
 
 ## Support, Scripts & More
-- [Visit our Store](https://lationscripts.com/github)
+- [Visit our Store](https://lationscripts.com/?utm_source=github&utm_medium=free-script)
 - [Join our Discord](https://discord.gg/9EbY4nM5uu)
 
 ## Features
