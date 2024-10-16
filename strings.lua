@@ -3,9 +3,7 @@ Strings = {}
 
 Strings.Notify = {
     wrongSlot = 'Place the item in the corresponding slot',
-    complete = 'You were paid $',
-    complete2 = ' via ',
-    complete3 = ' for x',
+    complete = 'You were paid $%s via %s for x%s %s',
     cantSell = 'You cannot sell that here'
 }
 
@@ -26,24 +24,13 @@ Strings.Target = {
 Strings.Alert = {
     confirmSale = {
         header = '**Confirm**',
-        content = 'Are you sure you want to sell x',
-        content2 = ' for $'
+        content = 'Are you sure you want to sell x%s %s for $%s?'
     }
 }
 
 Strings.Logs = {
-    colors = {
-        green = 65280
-    },
-    titles = {
-        itemSold = '💰 Item Sold'
-    },
-    messages = {
-        playerName = '**Player Name**: ',
-        playerID = '\n ** Player ID**: ',
-        playerIdent = '\n **Identifier**: ',
-        message = '\n **Message**: ',
-        itemSold = 'Successfully sold x',
-        itemSold2 = ' for $'
+    item_sold = {
+        title = 'Item Sold',
+        message = '%s (identifier: %s) successfully sold x%s %s for $%s'
     }
 }

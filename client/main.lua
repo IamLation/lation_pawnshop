@@ -31,7 +31,7 @@ end
 local KeyListener = function(shopId)
     while keyListener do
         Wait(0)
-        if IsControlJustReleased(0, Config.Interact) then
+        if IsControlJustReleased(0, Config.Setup.interact) then
             exports.ox_inventory:openInventory('stash', shopId)
             showingUI = false
         end
@@ -78,7 +78,7 @@ for shopId, data in pairs(Config.Shops) do
             if data.spawnPed then
                 peds[shopId] = SpawnNPC(data.pedModel, data.coords)
             end
-            if Config.Target == 'none' then
+            if Config.Setup.target == 'none' then
                 inRange[shopId] = true
                 CreateThread(function() ManageTextUI(shopId) end)
             else
@@ -86,7 +86,7 @@ for shopId, data in pairs(Config.Shops) do
                     name = 'shop' ..shopId,
                     coords = data.coords,
                     radius = data.radius,
-                    debug = Config.Debug,
+                    debug = Config.Setup.debug,
                     distance = 2,
                     options = {
                         {
@@ -109,7 +109,7 @@ for shopId, data in pairs(Config.Shops) do
         end
         peds[shopId] = nil
         inRange[shopId] = false
-        if Config.Target ~= 'none' then
+        if Config.Setup.target ~= 'none' then
             RemoveCircleZone('shop' ..shopId)
         end
     end
@@ -127,7 +127,7 @@ lib.callback.register('lation_pawnshop:ConfirmSale', function(_, shopId, item, p
     if not label then return false end
     local confirmation = lib.alertDialog({
         header = Strings.Alert.confirmSale.header,
-        content = Strings.Alert.confirmSale.content ..GroupDigits(quantity).. ' ' ..label.. Strings.Alert.confirmSale.content2 ..GroupDigits(price).. '?',
+        content = Strings.Alert.confirmSale.content:format(tostring(GroupDigits(quantity)), label, tostring(GroupDigits(price))),
         centered = true,
         cancel = true
     })

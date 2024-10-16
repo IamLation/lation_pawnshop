@@ -11,7 +11,7 @@ A modern Pawn Shop/Sell Shop script for ESX, QBCore & QBox frameworks built for 
 ## Features
 - Supports ESX, QBCore & QBox
 - Choose between using target or TextUI
-- Discord webhook logging optional
+- Fivemanage, Fivemerr & Discord logging
 - Create an unlimited amount of shops
 - Customize what items can be sold where
 - Set what time the shops are available

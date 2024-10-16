@@ -1,34 +1,45 @@
 Config = {} -- Do not alter
 
 -- 🔎 Looking for more high quality scripts?
--- 🛒 Shop Now: https://lationscripts.com/github
+-- 🛒 Shop Now: https://lationscripts.com
 -- 💬 Join Discord: https://discord.gg/9EbY4nM5uu
 -- 😢 How dare you leave this option false?!
-Config.YouFoundTheBestScripts = false
+Config.YouFoundTheBestScripts = true
 
--- Use only if needed, directed by support or know what you're doing
--- Notice: enabling debug features will significantly increase resmon
--- And should always be disabled in production
-Config.Debug = false
+----------------------------------------------
+--        🛠️ Setup the basics below
+----------------------------------------------
 
--- Do you want to be notified via server console if an update is available?
--- True if yes, false if no
-Config.VersionCheck = false
+Config.Setup = {
+    -- Use only if needed, directed by support or know what you're doing
+    -- Notice: enabling debug features will significantly increase resmon
+    -- And should always be disabled in production
+    debug = false,
+    -- Do you want to be notified via server console if an update is available?
+    version = true,
+    -- Target system, available options are: 'ox_target', 'qb-target', 'qtarget', 'custom' & 'none'
+    -- 'custom' needs to be added to client/functions.lua
+    -- If 'none' then TextUI is used instead of targeting
+    target = 'none',
+    -- Notification system, available options are: 'ox_lib', 'esx', 'qb', 'okok' & 'custom'
+    -- 'custom' needs to be added to client/functions.lua
+    notify = 'ox_lib',
+    -- If using TextUI (Config.Setup.target = 'none') then what key do you want to open the shop?
+    -- Default is 38 (E), find more control ID's here: https://docs.fivem.net/docs/game-references/controls/
+    interact = 38,
+    -- 'auto_clear' is a system to automatically clear shops after certain amount of time
+    auto_clear = {
+        -- Do you want to enable the auto clearing system?
+        enable = false,
+        -- If enable = true, how long (in minutes) should shops be cleared?
+        interval = 60
+    }
+}
 
--- Target system, available options are: 'ox_target', 'qb-target', 'qtarget', 'custom' & 'none'
--- 'custom' needs to be added to client/functions.lua
--- If 'none' then TextUI is used instead of targeting
-Config.Target = 'none'
+----------------------------------------------
+--       🏪 Create your pawn shops
+----------------------------------------------
 
--- Notification system, available options are: 'ox_lib', 'esx', 'qb', 'okok' & 'custom'
--- 'custom' needs to be added to client/functions.lua
-Config.Notify = 'ox_lib'
-
--- If using TextUI (Config.Target = 'none') then what key do you want to open the shop?
--- Default is 38 (E), find more control ID's here: https://docs.fivem.net/docs/game-references/controls/
-Config.Interact = 38
-
--- Manage & create your pawn shops here
 Config.Shops = {
     ['vinewood'] = { -- Unique identifier for this shop
         name = 'Vinewood Pawn & Jewelry', -- Shop name
@@ -41,7 +52,7 @@ Config.Shops = {
         -- You can limit the hours at which the shop is available here
         -- Min is the earliest the shop is available (default 06:00AM)
         -- Max is the latest the shop is available (detault 21:00 aka 9PM)
-        -- If you want it available 24/7, set min to 1 and max to 24
+        -- If you want it available 24/7, set min to 0 and max to 24
         hour = { min = 6, max = 21 },
         account = 'cash', -- Give 'cash', 'bank' or 'dirty' money when selling here?
         allowlist = {
@@ -80,7 +91,11 @@ Config.Shops = {
         hour = { min = 6, max = 21 },
         account = 'cash',
         allowlist = {
-            ['burger'] = { label = 'Burger', price = 25 },
+            ['water'] = { label = 'Water', price = 50 },
+            ['panties'] = { label = 'Knickers', price = 10 },
+            ['lockpick'] = { label = 'Lockpick', price = 25 },
+            ['phone'] = { label = 'Phone', price = 150 },
+            ['armour'] = { label = 'Bulletproof Vest', price = 225 },
         },
         placeholders = false,
         blip = {

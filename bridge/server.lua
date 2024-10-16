@@ -1,85 +1,136 @@
+-- Initialize global variables to store framework & inventory
+Framework, Inventory = nil, nil
+
 -- Get framework
-if GetResourceState('es_extended') == 'started' then
-    ESX = exports['es_extended']:getSharedObject()
-    Framework = 'esx'
-elseif GetResourceState('qb-core') == 'started' then
-    QBCore = exports['qb-core']:GetCoreObject()
-    Framework = 'qb'
-else
-    -- Add support for a custom framework here
-    print('Error: no framework detected')
+local function InitializeFramework()
+    if GetResourceState('es_extended') == 'started' then
+        ESX = exports['es_extended']:getSharedObject()
+        Framework = 'esx'
+    elseif GetResourceState('qbx_core') == 'started' then
+        Framework = 'qbx'
+    elseif GetResourceState('qb-core') == 'started' then
+        QBCore = exports['qb-core']:GetCoreObject()
+        Framework = 'qb'
+    elseif GetResourceState('ox_core') == 'started' then
+        Ox = require '@ox_core.lib.init'
+        Framework = 'ox'
+    else
+        -- Add custom framework here
+    end
+end
+
+-- Get inventory
+local function InitializeInventory()
+    if GetResourceState('ox_inventory') == 'started' then
+        Inventory = 'ox_inventory'
+    elseif GetResourceState('qb-inventory') == 'started' then
+        Inventory = 'qb-inventory'
+    elseif GetResourceState('qs-inventory') == 'started' then
+        Inventory = 'qs-inventory'
+    elseif GetResourceState('ps-inventory') == 'started' then
+        Inventory = 'ps-inventory'
+    elseif GetResourceState('origen_inventory') == 'started' then
+        Inventory = 'origen_inventory'
+    elseif GetResourceState('codem-inventory') == 'started' then
+        Inventory = 'codem-inventory'
+    else
+        -- Add custom inventory here
+    end
 end
 
 -- Get player from source
 --- @param source number Player ID
-GetPlayer = function(source)
+function GetPlayer(source)
     if not source then return end
     if Framework == 'esx' then
         return ESX.GetPlayerFromId(source)
     elseif Framework == 'qb' then
         return QBCore.Functions.GetPlayer(source)
+    elseif Framework == 'qbx' then
+        return exports.qbx_core:GetPlayer(source)
+    elseif Framework == 'ox' then
+        return Ox.GetPlayer(source)
     else
-        -- Add support for a custom framework here
+        -- Add custom framework here
     end
 end
 
--- Function to get a players identifier
+-- Function to get a player identifier by source
 --- @param source number Player ID
-GetPlayerIdentifier = function(source)
+function GetIdentifier(source)
     local player = GetPlayer(source)
     if not player then return end
     if Framework == 'esx' then
         return player.identifier
-    elseif Framework == 'qb' then
+    elseif Framework == 'qb' or Framework == 'qbx' then
         return player.PlayerData.citizenid
+    elseif Framework == 'ox' then
+        return player.charId
     else
-        -- Add support for a custom framework here
+        -- Add custom framework here
     end
 end
 
--- Function to get a players name
+-- Function to get a player's name
 --- @param source number Player ID
-GetName = function(source)
+--- @return string
+function GetName(source)
     local player = GetPlayer(source)
-    if not player then return end
+    if not player then return 'Unknown' end
     if Framework == 'esx' then
         return player.getName()
-    elseif Framework == 'qb' then
-        return player.PlayerData.charinfo.firstname..' '..player.PlayerData.charinfo.lastname
+    elseif Framework == 'qb' or Framework == 'qbx' then
+        return player.PlayerData.charinfo.firstname .. ' ' .. player.PlayerData.charinfo.lastname
+    elseif Framework == 'ox' then
+        return player.get('firstName') .. ' ' .. player.get('lastName')
     else
-        -- Add support for a custom framework here
+        -- Add custom framework here
     end
+    return 'Unknown'
 end
 
--- Function used to convert money type
---- @param moneyType string
-ConvertMoneyType = function(moneyType)
-    if moneyType == 'money' and Framework == 'qb' then
-        moneyType = 'cash'
-    elseif moneyType == 'cash' and Framework == 'esx' then
-        moneyType = 'money'
+-- Returns correct framework money type if needed
+--- @param type string Money type
+--- @return string
+local function ConvertMoneyType(type)
+    if type == 'money' and (Framework == 'qb' or Framework == 'qbx') then
+        type = 'cash'
+    elseif type == 'cash' and (Framework == 'esx' or Framework == 'ox') then
+        type = 'money'
+    else
+        -- Add custom framework here
     end
-    return moneyType
+    return type
 end
 
--- Function used to add money to account
---- @param source number
---- @param moneyType string
---- @param amount number
-AddMoney = function(source, moneyType, amount)
+-- Add money to players account
+--- @param source number Player ID
+--- @param type string Account to add to
+--- @param amount number Amount to add
+function AddMoney(source, type, amount)
     local player = GetPlayer(source)
     if not player then return end
-    moneyType = ConvertMoneyType(moneyType)
     if Framework == 'esx' then
-        if moneyType == 'dirty' then moneyType = 'black_money' end
-        player.addAccountMoney(moneyType, amount)
-    elseif Framework == 'qb' then
-        if moneyType == 'dirty' then
-            exports.ox_inventory:AddItem(source, 'markedbills', amount)
-            return
+        if type == 'dirty' then type = 'black_money' end
+        player.addAccountMoney(ConvertMoneyType(type), amount)
+    elseif Framework == 'qb' or Framework == 'qbx' then
+        if type == 'dirty' then
+            return exports.ox_inventory:AddItem(source, 'markedbills', amount)
         end
-        player.Functions.AddMoney(moneyType, amount)
+        player.Functions.AddMoney(ConvertMoneyType(type), amount)
+    elseif Framework == 'ox' then
+        if type == 'cash' or type == 'money' or type == 'dirty' then
+            if type == 'dirty' then type = 'black_money' end
+            exports.ox_inventory:AddItem(source, ConvertMoneyType(type), amount)
+        else
+            local accountId = Ox.GetCharacterAccount(source).id
+            Ox.DepositMoney(source, accountId, amount)
+        end
     else
-        -- Add support for a custom framework here
+        -- Add custom framework here
     end
 end
+
+-- Initialize defaults
+InitializeFramework()
+InitializeInventory()

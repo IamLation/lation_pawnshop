@@ -66,7 +66,7 @@ local BeginTransaction = function(payload)
         return false
     end
     local playerName = GetName(source)
-    local identifier = GetPlayerIdentifier(source)
+    local identifier = GetIdentifier(source)
     local shop = Config.Shops[payload.toInventory].name
     if not shop then
         EventLog('[main.lua]: BeginTransaction: unable to find shop in config, cannot proceed..')
@@ -85,6 +85,11 @@ local BeginTransaction = function(payload)
                             EventLog('[main.lua]: BeginTransaction: item is not placed in correct slot, cannot proceed..')
                             return false
                         end
+                    else
+                        if payload.action == 'swap' then
+                            EventLog('[main.lua]: BeginTransaction: cannot place item on top of non-matching item, cannot proceed..')
+                            return false
+                        end
                     end
                     itemAccepted = true
                     local price, quantity = math.floor(info.price * payload.count), payload.count
@@ -93,18 +98,12 @@ local BeginTransaction = function(payload)
                         EventLog('[main.lua]: BeginTransaction: sale was cancelled by player, cannot proceed..')
                         return false
                     end
-                    TriggerClientEvent('lation_pawnshop:Notify', source, Strings.Notify.complete ..GroupDigits(price).. Strings.Notify.complete2 ..data.account.. Strings.Notify.complete3 ..GroupDigits(quantity).. ' ' ..tostring(info.label), 'success')
+                    TriggerClientEvent('lation_pawnshop:Notify', source, Strings.Notify.complete:format(tostring(GroupDigits(price)), data.account, tostring(GroupDigits(quantity)), info.label), 'success')
                     AddMoney(source, data.account, price)
-                    if Logs.Types.itemSold.enabled then
-                        DiscordLogs(
-                            Logs.Types.itemSold.webhook,
-                            Strings.Logs.titles.itemSold,
-                            Strings.Logs.messages.playerName ..playerName..
-                            Strings.Logs.messages.playerID ..tostring(source)..
-                            Strings.Logs.messages.playerIdent ..identifier..
-                            Strings.Logs.messages.message ..Strings.Logs.messages.itemSold.. GroupDigits(quantity).. ' ' ..info.label.. Strings.Logs.messages.itemSold2.. GroupDigits(price).. ' ' ..data.account,
-                            Strings.Logs.colors.green
-                        )
+                    if Logs.Events.item_sold then
+                        local log = Strings.Logs.item_sold.message
+                        local message = string.format(log, tostring(playerName), tostring(identifier), tostring(GroupDigits(quantity)), info.label, tostring(GroupDigits(price)))
+                        PlayerLog(source, Strings.Logs.item_sold.title, message)
                     end
                     if not payload.stack then
                         waiting = true
@@ -123,9 +122,26 @@ local BeginTransaction = function(payload)
     return false
 end
 
+-- If auto_clear is enabled, clear shops at specified interval
+if Config.Setup.auto_clear.enable then
+    local interval = Config.Setup.auto_clear.interval * 60000
+    CreateThread(function()
+        while true do
+            for shopId, data in pairs(Config.Shops) do
+                exports.ox_inventory:ClearInventory(shopId)
+                if data.placeholders then
+                    for item, _ in pairs(data.allowlist) do
+                        exports.ox_inventory:AddItem(shopId, item, 1)
+                    end
+                end
+            end
+            Wait(interval)
+        end
+    end)
+end
+
 -- Register the swapItems hook
 exports.ox_inventory:registerHook('swapItems', function(payload)
-    EventLog(json.encode(payload, { indent = true }))
     local result = BeginTransaction(payload)
     return result
 end, {inventoryFilter = inventories})
