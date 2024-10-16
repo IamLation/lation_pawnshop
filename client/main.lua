@@ -6,7 +6,7 @@ local inRange, showingUI, keyListener = {}, false, false
 
 -- Used to create blip if enabled
 --- @param key string
-local CreateBlips = function(key)
+local function CreateBlips(key)
     local data = Config.Shops[key]
     local coords = data.coords
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
@@ -21,14 +21,14 @@ end
 
 -- Function used to make numbers prettier (Credits to ESX for the function)
 --- @param value number
-local GroupDigits = function(value)
+local function GroupDigits(value)
 	local left, num, right = string.match(value, '^([^%d]*%d)(%d*)(.-)$')
 	return left .. (num:reverse():gsub('(%d%d%d)', '%1,'):reverse()) .. right
 end
 
 -- Used to manage key listening
 --- @param shopId string
-local KeyListener = function(shopId)
+local function KeyListener(shopId)
     while keyListener do
         Wait(0)
         if IsControlJustReleased(0, Config.Setup.interact) then
@@ -40,7 +40,7 @@ end
 
 -- Used to manage the TextUI if applicable
 --- @param shopId string
-local ManageTextUI = function(shopId)
+local function ManageTextUI(shopId)
     local pos = Config.Shops[shopId].coords
     while inRange[shopId] do
         Wait(350)

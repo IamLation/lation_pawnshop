@@ -4,7 +4,7 @@ Config = {} -- Do not alter
 -- 🛒 Shop Now: https://lationscripts.com
 -- 💬 Join Discord: https://discord.gg/9EbY4nM5uu
 -- 😢 How dare you leave this option false?!
-Config.YouFoundTheBestScripts = true
+Config.YouFoundTheBestScripts = false
 
 ----------------------------------------------
 --        🛠️ Setup the basics below

@@ -6,7 +6,7 @@ local waiting = false
 
 -- Function used to make numbers prettier (Credits to ESX for the function)
 --- @param value number
-local GroupDigits = function(value)
+local function GroupDigits(value)
 	local left, num, right = string.match(value, '^([^%d]*%d)(%d*)(.-)$')
 	return left .. (num:reverse():gsub('(%d%d%d)', '%1,'):reverse()) .. right
 end
@@ -34,7 +34,7 @@ end
 --- @param source number
 --- @param item string
 --- @param count number
-local AwaitRemoval = function(source, item, count)
+local function AwaitRemoval(source, item, count)
     local source = source
     local wait = 5 -- Increase this number slightly if items failing to remove
     while waiting do
@@ -50,7 +50,7 @@ end
 
 -- Used to handle all movements and final transaction in inventory
 --- @param payload table
-local BeginTransaction = function(payload)
+local function BeginTransaction(payload)
     if not payload then return false end
     if payload.toType == 'player' then
         EventLog('[main.lua]: BeginTransaction: inventory is not a shop, cannot proceed..')
