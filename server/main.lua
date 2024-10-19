@@ -29,25 +29,6 @@ for shopId, data in pairs(Config.Shops) do
     inventories[#inventories + 1] = shopId
 end
 
--- Thread to handle removal of non-stackable items
--- A pretty hacky solution, but works nevertheless
---- @param source number
---- @param item string
---- @param count number
-local function AwaitRemoval(source, item, count)
-    local source = source
-    local wait = 5 -- Increase this number slightly if items failing to remove
-    while waiting do
-        Wait(0)
-        wait = wait - 1
-        if wait <= 0 then
-            exports.ox_inventory:RemoveItem(source, item, count)
-            waiting = false
-            break
-        end
-    end
-end
-
 -- Used to handle all movements and final transaction in inventory
 --- @param payload table
 local function BeginTransaction(payload)
@@ -104,10 +85,6 @@ local function BeginTransaction(payload)
                         local log = Strings.Logs.item_sold.message
                         local message = string.format(log, tostring(playerName), tostring(identifier), tostring(GroupDigits(quantity)), info.label, tostring(GroupDigits(price)))
                         PlayerLog(source, Strings.Logs.item_sold.title, message)
-                    end
-                    if not payload.stack then
-                        waiting = true
-                        CreateThread(function() AwaitRemoval(source, payload.fromSlot.name, payload.count) end)
                     end
                     return true
                 end
