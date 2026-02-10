@@ -36,6 +36,16 @@ Config.Setup = {
     }
 }
 
+Config.Target = {
+    label = 'Open Shop',
+    icon = 'fas fa-shop'
+}
+
+Config.TextUI = { -- only used if Config.Setup.target = 'none'
+    label = '**Pawn Shop** \n E - Open Shop',
+    icon = 'fas fa-shop'
+}
+
 ----------------------------------------------
 --       🏪 Create your pawn shops
 ----------------------------------------------

@@ -1,3 +1,5 @@
+lib.locale()
+
 -- Initialize table to store inventories for hook filter
 local inventories = {}
 
@@ -81,7 +83,7 @@ local function BeginTransaction(payload)
                 if payload.fromSlot.name == item then
                     if data.placeholders then
                         if payload.fromSlot.name ~= payload.toSlot.name then
-                            TriggerClientEvent('lation_pawnshop:Notify', source, Strings.Notify.wrongSlot, 'inform')
+                            TriggerClientEvent('lation_pawnshop:Notify', source, locale('notify.wrongSlot'), 'inform')
                             EventLog('[main.lua]: BeginTransaction: item is not placed in correct slot, cannot proceed..')
                             return false
                         end
@@ -109,12 +111,12 @@ local function BeginTransaction(payload)
                         EventLog('[main.lua]: BeginTransaction: sale was cancelled by player, cannot proceed..')
                         return false
                     end
-                    TriggerClientEvent('lation_pawnshop:Notify', source, Strings.Notify.complete:format(tostring(GroupDigits(price)), data.account, tostring(GroupDigits(quantity)), info.label), 'success')
+                    TriggerClientEvent('lation_pawnshop:Notify', source, locale('notify.complete'):format(tostring(GroupDigits(price)), data.account, tostring(GroupDigits(quantity)), info.label), 'success')
                     AddMoney(source, data.account, price)
                     if Logs.Events.item_sold then
-                        local log = Strings.Logs.item_sold.message
+                        local log = locale('logs.message')
                         local message = string.format(log, tostring(playerName), tostring(identifier), tostring(GroupDigits(quantity)), info.label, tostring(GroupDigits(price)))
-                        PlayerLog(source, Strings.Logs.item_sold.title, message)
+                        PlayerLog(source, locale('logs.title'), message)
                     end
                     if data.placeholders then
                         if not payload.toSlot.stack then
@@ -127,7 +129,7 @@ local function BeginTransaction(payload)
             end
             if not itemAccepted then
                 EventLog('[main.lua]: BeginTransaction: transaction failed, this shop does not accept: ' .. tostring(payload.fromSlot.name))
-                TriggerClientEvent('lation_pawnshop:Notify', source, Strings.Notify.cantSell, 'error')
+                TriggerClientEvent('lation_pawnshop:Notify', source, locale('notify.cantSell'), 'error')
                 return false
             end
         end

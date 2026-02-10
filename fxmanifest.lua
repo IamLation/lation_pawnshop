@@ -4,7 +4,7 @@ lua54 'yes'
 
 name 'lation_pawnshop'
 author 'iamlation'
-version '1.1.1'
+version '1.1.2'
 description 'A Pawn Shop script for ESX, QBCore & QBox using ox_inventory'
 
 server_scripts {
@@ -20,11 +20,14 @@ client_scripts {
 
 shared_scripts {
     'config.lua',
-    'strings.lua',
     '@ox_lib/init.lua'
 }
 
 dependencies {
 	'ox_lib',
     'ox_inventory'
+}
+
+files {
+    'locales/*.json',
 }
