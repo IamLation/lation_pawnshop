@@ -1,15 +1,17 @@
+lib.locale()
+
 -- Function to show a notification
 --- @param message string
 --- @param type string
 function ShowNotification(message, type)
     if Config.Setup.notify == 'ox_lib' then
-        lib.notify({ title = 'Pawn Shop', description = message, type = type, position = 'top', icon = 'fas fa-shop' })
+        lib.notify({ title = locale('notify.title'), description = message, type = type, position = 'top', icon = Config.Target.icon })
     elseif Config.Setup.notify == 'esx' then
         ESX.ShowNotification(message)
     elseif Config.Setup.notify == 'qb' then
         QBCore.Functions.Notify(message, type)
     elseif Config.Setup.notify == 'okok' then
-        exports['okokNotify']:Alert('Pawn Shop', message, 5000, type, false)
+        exports['okokNotify']:Alert(locale('notify.title'), message, 5000, type, false)
     elseif Config.Setup.notify == 'custom' then
         -- Add custom notification export/event here
     end

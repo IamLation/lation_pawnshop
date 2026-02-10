@@ -1,5 +1,6 @@
 {
     "notify": {
+        "title": "Pawn Shop",
         "wrongSlot": "Place the item in the corresponding slot",
         "complete": "You were paid $%s via %s for x%s %s",
         "cantSell": "You cannot sell that here"
