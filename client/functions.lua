@@ -94,13 +94,18 @@ end
 -- Function used to spawn NPCs
 --- @param model string
 --- @param coords vector3 | vector4
-function SpawnNPC(model, coords)
+--- @param scenario string | nil
+function SpawnNPC(model, coords, scenario)
     if not model or not coords then return end
     lib.requestModel(model, 10000)
     while not HasModelLoaded(model) do Wait(0) end
-    local ped = CreatePed(0, model, coords.x, coords.y, coords.z - 1.0, coords.w, false, true)
+    local heading = coords.w or 0.0
+    local ped = CreatePed(0, model, coords.x, coords.y, coords.z - 1.0, heading, false, true)
     FreezeEntityPosition(ped, true)
     SetBlockingOfNonTemporaryEvents(ped, true)
     SetEntityInvincible(ped, true)
+    if scenario then
+        TaskStartScenarioInPlace(ped, scenario, 0, true)
+    end
     return ped
 end
