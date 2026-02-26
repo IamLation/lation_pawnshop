@@ -1,0 +1,16 @@
+{
+    "notify": {
+        "title": "Pawn Shop",
+        "wrongSlot": "Place the item in the corresponding slot",
+        "complete": "You were paid $%s via %s for x%s %s",
+        "cantSell": "You cannot sell that here"
+    },
+    "confirmSale": {
+        "header": "**Confirm**",
+        "content": "Are you sure you want to sell x%s %s for $%s?"
+    },
+    "logs": {
+        "title": "Item Sold",
+        "message": "%s (identifier: %s) successfully sold x%s %s for $%s"
+    }
+}

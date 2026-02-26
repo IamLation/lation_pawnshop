@@ -1,3 +1,5 @@
+lib.locale()
+
 -- Initalize table to store points & peds
 local points, peds = {}, {}
 
@@ -47,7 +49,7 @@ local function ManageTextUI(shopId)
         local distance = #(GetEntityCoords(cache.ped) - vec3(pos.x, pos.y, pos.z))
         if distance < 2.0 then
             if not showingUI and not LocalPlayer.state.invOpen then
-                ShowTextUI(Strings.TextUI.openShop.label, Strings.TextUI.openShop.icon)
+                ShowTextUI(Config.TextUI.label, Config.TextUI.icon)
                 showingUI = true
             end
             if not keyListener then
@@ -55,11 +57,11 @@ local function ManageTextUI(shopId)
                 CreateThread(function() KeyListener(shopId) end)
             end
             if LocalPlayer.state.invOpen then
-                HideTextUI(Strings.TextUI.openShop.label)
+                HideTextUI(Config.TextUI.label)
                 showingUI = false
             end
         else
-            HideTextUI(Strings.TextUI.openShop.label)
+            HideTextUI(Config.TextUI.label)
             showingUI = false
             if keyListener then
                 keyListener = false
@@ -76,7 +78,7 @@ for shopId, data in pairs(Config.Shops) do
         local hour = GetClockHours()
         if hour >= data.hour.min and hour < data.hour.max then
             if data.spawnPed then
-                peds[shopId] = SpawnNPC(data.pedModel, data.coords)
+                peds[shopId] = SpawnNPC(data.pedModel, data.coords, data.scenario)
             end
             if Config.Setup.target == 'none' then
                 inRange[shopId] = true
@@ -90,8 +92,8 @@ for shopId, data in pairs(Config.Shops) do
                     distance = 2,
                     options = {
                         {
-                            label = Strings.Target.openShop.label,
-                            icon = Strings.Target.openShop.icon,
+                            label = Config.Target.label,
+                            icon = Config.Target.icon,
                             distance = 2,
                             action = function() exports.ox_inventory:openInventory('stash', shopId) end,
                             onSelect = function() exports.ox_inventory:openInventory('stash', shopId) end
@@ -126,8 +128,8 @@ lib.callback.register('lation_pawnshop:ConfirmSale', function(_, shopId, item, p
     local label = Config.Shops[shopId].allowlist[item].label
     if not label then return false end
     local confirmation = lib.alertDialog({
-        header = Strings.Alert.confirmSale.header,
-        content = Strings.Alert.confirmSale.content:format(tostring(GroupDigits(quantity)), label, tostring(GroupDigits(price))),
+        header = locale('confirmSale.header'),
+        content = locale('confirmSale.content'):format(tostring(GroupDigits(quantity)), label, tostring(GroupDigits(price))),
         centered = true,
         cancel = true
     })

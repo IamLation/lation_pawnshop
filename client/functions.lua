@@ -1,15 +1,17 @@
+lib.locale()
+
 -- Function to show a notification
 --- @param message string
 --- @param type string
 function ShowNotification(message, type)
     if Config.Setup.notify == 'ox_lib' then
-        lib.notify({ title = 'Pawn Shop', description = message, type = type, position = 'top', icon = 'fas fa-shop' })
+        lib.notify({ title = locale('notify.title'), description = message, type = type, position = 'top', icon = Config.Target.icon })
     elseif Config.Setup.notify == 'esx' then
         ESX.ShowNotification(message)
     elseif Config.Setup.notify == 'qb' then
         QBCore.Functions.Notify(message, type)
     elseif Config.Setup.notify == 'okok' then
-        exports['okokNotify']:Alert('Pawn Shop', message, 5000, type, false)
+        exports['okokNotify']:Alert(locale('notify.title'), message, 5000, type, false)
     elseif Config.Setup.notify == 'custom' then
         -- Add custom notification export/event here
     end
@@ -92,13 +94,18 @@ end
 -- Function used to spawn NPCs
 --- @param model string
 --- @param coords vector3 | vector4
-function SpawnNPC(model, coords)
+--- @param scenario string | nil
+function SpawnNPC(model, coords, scenario)
     if not model or not coords then return end
     lib.requestModel(model, 10000)
     while not HasModelLoaded(model) do Wait(0) end
-    local ped = CreatePed(0, model, coords.x, coords.y, coords.z - 1.0, coords.w, false, true)
+    local heading = coords.w or 0.0
+    local ped = CreatePed(0, model, coords.x, coords.y, coords.z - 1.0, heading, false, true)
     FreezeEntityPosition(ped, true)
     SetBlockingOfNonTemporaryEvents(ped, true)
     SetEntityInvincible(ped, true)
+    if scenario then
+        TaskStartScenarioInPlace(ped, scenario, 0, true)
+    end
     return ped
 end

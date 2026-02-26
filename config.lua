@@ -36,6 +36,16 @@ Config.Setup = {
     }
 }
 
+Config.Target = {
+    label = 'Open Shop',
+    icon = 'fas fa-shop'
+}
+
+Config.TextUI = { -- only used if Config.Setup.target = 'none'
+    label = '**Pawn Shop** \n E - Open Shop',
+    icon = 'fas fa-shop'
+}
+
 ----------------------------------------------
 --       🏪 Create your pawn shops
 ----------------------------------------------
@@ -49,6 +59,7 @@ Config.Shops = {
         radius = 1.0, -- How large of a circle zone radius (for targeting only)
         spawnPed = false, -- Spawn a ped to interact with here?
         pedModel = 'a_m_y_beach_02', -- If spawnPed = true, what ped model?
+        scenario = "WORLD_HUMAN_CLIPBOARD",
         -- You can limit the hours at which the shop is available here
         -- Min is the earliest the shop is available (default 06:00AM)
         -- Max is the latest the shop is available (detault 21:00 aka 9PM)
@@ -88,6 +99,7 @@ Config.Shops = {
         radius = 1.0,
         spawnPed = true,
         pedModel = 'a_m_y_beach_02',
+        scenario = "WORLD_HUMAN_CLIPBOARD",
         hour = { min = 6, max = 21 },
         account = 'cash',
         allowlist = {
