@@ -78,7 +78,7 @@ for shopId, data in pairs(Config.Shops) do
         local hour = GetClockHours()
         if hour >= data.hour.min and hour < data.hour.max then
             if data.spawnPed then
-                peds[shopId] = SpawnNPC(data.pedModel, data.coords)
+                peds[shopId] = SpawnNPC(data.pedModel, data.coords, data.scenario)
             end
             if Config.Setup.target == 'none' then
                 inRange[shopId] = true
